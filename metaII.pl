@@ -26,38 +26,39 @@ $output = qr{
               (?: \s*
                 \$ (?{say "io.write(_input)"})
               |
-                $string (?{say "io.write(", $^N, ")"}))*
+                \s* $string (?{say "io.write(", $^N, ")"})
+              )*
               \s*
               \} (?{say 'io.write("\\n")'}) \s*
       }xm;
 
 
 $id = qr{
-          ([\w\d]+)
+          ([\w][\w\d]*)
       }xm;
 
 $primary = qr{
-              $string (?{say "_run.testSTR($^N)"})
-             |  $id     (?{say($^N, "()")})
-             | \.id    (?{say "local _input = _run.parseID()"})
-             | \.number (?{say "local _input = _run.parseNUM()"})
-             | \.string(?{say "local _input = _run.parseSTR()"})
-             | \.empty (?{say "_switch = true"})
-             | \( \s*  $choice \s* \)
-             | \*  \s*  (?{say "repeat 	-- repetition --"})
-               $primary(?{say "until not _switch 	-- repetition (end)"})
-                     \s*  (?{say "_switch = true "})
+               (?: $string  (?{say "_run.testSTR($^N)"})
+               |  $id     (?{say($^N, "()")})
+               | \.id    (?{say "local _input = _run.parseID()"})
+               | \.number (?{say "local _input = _run.parseNUM()"})
+               | \.string (?{say "local _input = _run.parseSTR()"})
+               | \.empty (?{say "_switch = true"})
+               | \( \s*  (??{our $choice}) \s* \)
+               | \*  \s*  (?{say "repeat 	-- repetition --"})
+                  (??{our $primary}) (?{say "until not _switch 	-- repetition (end)"})
+                     \s*  (?{say "_switch = true "}))
            }xm;
 
-$sequence = qr{
+$sequence = qr{ \s*
                 (?{say"repeat	-- sequence"})
-                (?:$primary (?{say "if not _switch then break end"})| $output)
-                (?:\s+ $primary (?{say "if not _switch then break end"}) | \s+ $output)*
+                (?: $primary (?{say "if not _switch then break end"})| $output)
+                (?: \s* (?:  $primary (?{say "if not _switch then error()  end"}) | $output ))*
                 (?{say"until true	-- sequence (end)"})
             }xm;
 
 $choice = qr{   (?{say"repeat		-- choice --"})
-                $sequence (?:\s* \| (?{say"if _switch then break end"}) \s* $sequence)*
+                $sequence (?:\s* \| (?{say"if _switch then break end"}) \s* $sequence)* \s*
                 (?{say"until true	-- choice (end)"})
           }xm;
 
@@ -68,16 +69,27 @@ $rule = qr{
             ; (?{say "end -- (", (pop(@stack)), ')' })
         }xm;
 
-$program = qr/ \.syntax \s+
+$program = qr/^ \.syntax \s+
                $id (?{ push(@stack, $^N); say('local _run = require("runtime")')}) \s+
-               (?: $rule)* \s*
+               (?: \s* $rule)* \s*
                \.end (?{say(pop(@stack), "()")})
-             /mx;
+             $/mx;
 
-# (".syntax bar
-#   program = '.syntax' .id { 'local _run = require([[runtime]])' }  * rule '.end' ;
-# .end" =~ /$program/);
+# (q[
+#  '{' * ( 'hola' | .string ) '}'
+# ] =~ /$choice/);
 
+#die;
+
+
+# (q[.syntax program
+#   output   = '{'
+#              * ( '$'      {'io.write(_input)'}
+#                | .string  {'io.write(' $  ')'})
+#              '}'          {'io.write("\\n")' };
+# .end] =~ /$program/mx);
+
+# die;
 
 my $bootstrap = q(
 .syntax program
@@ -116,7 +128,18 @@ my $bootstrap = q(
 .end
 );
 
+# $bootstrap = q[
+# output   = '{' * ( '$' | .string  ) '}';
+# ];
+
 ($bootstrap =~ /$program/)
+
+# my $pr = q[
+# * ( '$' | .string )
+# ];
+# ($pr =~ /$primary/)
+
+# (q({ 'hola' $  $ 'adeu'}) =~ /$output/)
 
 
 # ("'.syntax'" =~ /$primary/)
