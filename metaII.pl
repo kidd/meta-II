@@ -118,7 +118,7 @@ my $bootstrap = q(
                        {'_switch = true'                       };
 
   sequence = {'repeat            -- sequence   --'   }
-               (primary {'if not _switch then break end'} | output)
+               (primary {'if not _switch then break   end'} | output)
              * (primary {'if not _switch then error() end'} | output)
              {'until true        -- sequence   (end)'};
 
