@@ -52,6 +52,13 @@ $primary = qr{
 
 $sequence = qr{ \s*
                 (?{say"repeat	-- sequence"})
+                (?:$primary (?{say "if not _switch then break end"})| $output) \s*
+                (?:\s+ $primary (?{say "if not _switch then error()  end"}) | \s+ $output )*
+                (?{say"until true	-- sequence (end)"})
+            }xm;
+
+$sequence = qr{ \s*
+                (?{say"repeat	-- sequence"})
                 (?: $primary (?{say "if not _switch then break end"})| $output)
                 (?: \s* (?:  $primary (?{say "if not _switch then error()  end"}) | $output ))*
                 (?{say"until true	-- sequence (end)"})
@@ -79,7 +86,7 @@ $program = qr/^ \.syntax \s+
 #  '{' * ( 'hola' | .string ) '}'
 # ] =~ /$choice/);
 
-#die;
+# die;
 
 
 # (q[.syntax program
@@ -97,7 +104,7 @@ my $bootstrap = q(
   output   = '{'
              * ( '$'      {'io.write(_input)'}
                | .string  {'io.write(' $  ')'})
-             '}'          {'io.write("\\n")' };
+             '}'          {'io.write("\\\\n")' };
 
   primary  = .id       { $ '()'                                }
            | .string   {'_run.testSTR(' $ ')'                  }
@@ -111,7 +118,7 @@ my $bootstrap = q(
                        {'_switch = true'                       };
 
   sequence = {'repeat            -- sequence   --'   }
-               (primary {'if not _switch then break   end'} | output)
+               (primary {'if not _switch then break end'} | output)
              * (primary {'if not _switch then error() end'} | output)
              {'until true        -- sequence   (end)'};
 
