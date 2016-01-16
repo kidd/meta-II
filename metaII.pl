@@ -52,13 +52,6 @@ $primary = qr{
 
 $sequence = qr{ \s*
                 (?{say"repeat	-- sequence"})
-                (?:$primary (?{say "if not _switch then break end"})| $output) \s*
-                (?:\s+ $primary (?{say "if not _switch then error()  end"}) | \s+ $output )*
-                (?{say"until true	-- sequence (end)"})
-            }xm;
-
-$sequence = qr{ \s*
-                (?{say"repeat	-- sequence"})
                 (?: $primary (?{say "if not _switch then break end"})| $output)
                 (?: \s* (?:  $primary (?{say "if not _switch then error()  end"}) | $output ))*
                 (?{say"until true	-- sequence (end)"})
@@ -81,22 +74,6 @@ $program = qr/^ \.syntax \s+
                (?: \s* $rule)* \s*
                \.end (?{say(pop(@stack), "()")})
              $/mx;
-
-# (q[
-#  '{' * ( 'hola' | .string ) '}'
-# ] =~ /$choice/);
-
-# die;
-
-
-# (q[.syntax program
-#   output   = '{'
-#              * ( '$'      {'io.write(_input)'}
-#                | .string  {'io.write(' $  ')'})
-#              '}'          {'io.write("\\n")' };
-# .end] =~ /$program/mx);
-
-# die;
 
 my $bootstrap = q(
 .syntax program
@@ -135,23 +112,4 @@ my $bootstrap = q(
 .end
 );
 
-# $bootstrap = q[
-# output   = '{' * ( '$' | .string  ) '}';
-# ];
-
 ($bootstrap =~ /$program/)
-
-# my $pr = q[
-# * ( '$' | .string )
-# ];
-# ($pr =~ /$primary/)
-
-# (q({ 'hola' $  $ 'adeu'}) =~ /$output/)
-
-
-# ("'.syntax'" =~ /$primary/)
-# print("DONE\n");
-
-# while (chomp($_ = <>)){
-#   /$program/xm;
-# }
