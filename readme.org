@@ -16,7 +16,9 @@
 * What
   This is my implementation of Schorre's [[http://www.ibm-1401.info/Meta-II-schorre.pdf][metaII]] metacompiler using
   perl5 regex's for bootstrapping and compiling to lua (using
-  http://loup-vaillant.fr/projects/metacompilers lua's model)
+  http://loup-vaillant.fr/projects/metacompilers lua's model).
+  Articles abut the implementation and random ramblings also in [[http://puntoblogspot.blogspot.com.es/search/label/metacompilers][my
+  blog]].
 
 * Why
   Reading about metacompilers I've tinkered with them on and off for a
@@ -25,7 +27,6 @@
   basically does the same as metaII ouptut patterns, so I tried to
   bootstrap a metaII compiler using recursive regular expressions and
   (?{}).
-
 
 * Why should I care?
   Take a look at [[./bootstrap.txt]] , and if you don't find that a piece of
@@ -36,14 +37,15 @@
 ** Why there are 2 backslashes in the [[file:metaII.pl::\}%20(?{say%20'io.write("\\n")'})%20\s*][perl regex]] and 4 in the [[file:metaII.pl::'}'%20{'io.write("\\\\n")'%20};][syntax string]]?
    Try to apply modifications to them and see how they react.
 
-** Recursive regexen in perl that call themselves or call undefined regexes at compile time:
-   Instead of directly calling them by name, you have to wrap them
-   into (??{our $regex}) to delay the evaluation to runtime.
+** Recursive regexes in perl can call themselves.
+   Or call undefined regexes at compile time: Instead of directly
+   calling them by name, you have to wrap them into (??{our $regex})
+   to delay the evaluation to runtime.
 
 ** /x flag in regex is invaluable in this case.
 
 ** Perldoc
-   Perl has by still the best documentation I've read for any
+   Perl has by far the best documentation I've read for any
    programming language. Fun to read, useful and pragmatic at the same
    time. Take a look at [[http://perldoc.perl.org/perlre.html#Backtracking][Backtracking]] to see a great explanation of
    backtracking behaviour in regexes.
@@ -52,7 +54,12 @@
    $[1-9] get reset after a complete regex has ben matched, but not
    during the matching. If you need to match the latest match in this
    very same regex, use $^N.  Use a stack in case of nested regexes
-   needing the 'latest match'.
+   needing the 'latest match'. More regex wizardy in "Parsing JSON with
+   a single regex": https://www.youtube.com/watch?v=-O-Uajd2WzU
 
 * See also
   - [[http://www.tinlizzie.org/ometa/][Ometa]]
+
+* Who
+  - Author: Raimon Grau <raimonster@gmail.com>
+  - Gif artwork: https://www.reddit.com/r/perfectloops/comments/413wxr/penrose_loop/
