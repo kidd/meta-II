@@ -11,6 +11,8 @@
 #+EXCLUDE_TAGS: noexport
 #+CREATOR: Emacs 24.5.1 (Org mode 8.3.2)
 
+[[./img/penrose.gif]]
+
 * What
   This is my implementation of Schorre's [[http://www.ibm-1401.info/Meta-II-schorre.pdf][metaII]] metacompiler using
   perl5 regex's for bootstrapping and compiling to lua (using
@@ -26,7 +28,7 @@
 
 
 * Why should I care?
-  Take a look at [[boostrap.txt]] , and if you don't find that a piece of
+  Take a look at [[./boostrap.txt]] , and if you don't find that a piece of
   self-reference beauty, you probably shouldn't care at all.
 
 * Curious to note from the code:
