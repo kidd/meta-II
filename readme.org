@@ -1,0 +1,51 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil arch:headline
+#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+TITLE: MetaII
+#+DATE: <2016-01-16 Sat>
+#+AUTHOR: Raimon Grau
+#+EMAIL: raimonster@gmail.com
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.2)
+
+* What
+  This is my implementation of Schorre's [[http://www.ibm-1401.info/Meta-II-schorre.pdf][metaII]] metacompiler using
+  perl5 regex's for bootstrapping and compiling to lua (using
+  http://loup-vaillant.fr/ lua's model)
+
+* Why
+  Reading about metacompilers I've tinkered with them on and off for a
+  couple of months, taking off from loup's implementation, but when I
+  was reading [[http://perldoc.perl.org/perlre.html][perlre]], I rediscovered the (?{}) extended pattern, which
+  basically does the same as metaII ouptut patterns, so I tried to
+  bootstrap a metaII compiler using recursive regular expressions and
+  (?{}).
+
+* Curious to note from the code:
+
+** Why there are 2 backslashes in the [[file:metaII.pl::\}%20(?{say%20'io.write("\\n")'})%20\s*][perl regex]] and 4 in the [[file:metaII.pl::'}'%20{'io.write("\\\\n")'%20};][syntax string]]?
+   Try to apply modifications to them and see how they react.
+
+** Recursive regexen in perl that call themselves or call undefined regexes at compile time:
+   Instead of directly calling them by name, you have to wrap them
+   into (??{our $regex}) to delay the evaluation to runtime.
+
+** /x flag in regex is invaluable in this case.
+
+** Perldoc
+   Perl has by still the best documentation I've read for any
+   programming language. Fun to read, useful and pragmatic at the same
+   time. Take a look at [[http://perldoc.perl.org/perlre.html#Backtracking][Backtracking]] to see a great explanation of
+   backtracking behaviour in regexes.
+
+** Special vars in Perl regexen.
+   $[1-9] get reset after a complete regex has ben matched, but not
+   during the matching. If you need to match the latest match in this
+   very same regex, use $^N.  Use a stack in case of nested regexes
+   needing the 'latest match'.
+
+* See also
+  - [[http://www.tinlizzie.org/ometa/][Ometa]]
