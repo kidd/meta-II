@@ -24,6 +24,11 @@
   bootstrap a metaII compiler using recursive regular expressions and
   (?{}).
 
+
+* Why should I care?
+  Take a look at [[boostrap.txt]] , and if you don't find that a piece of
+  self-reference beauty, you probably shouldn't care at all.
+
 * Curious to note from the code:
 
 ** Why there are 2 backslashes in the [[file:metaII.pl::\}%20(?{say%20'io.write("\\n")'})%20\s*][perl regex]] and 4 in the [[file:metaII.pl::'}'%20{'io.write("\\\\n")'%20};][syntax string]]?
