@@ -34,9 +34,6 @@
 
 * Curious to note from the code:
 
-** Why there are 2 backslashes in the [[file:metaII.pl::\}%20(?{say%20'io.write("\\n")'})%20\s*][perl regex]] and 4 in the [[file:metaII.pl::'}'%20{'io.write("\\\\n")'%20};][syntax string]]?
-   Try to apply modifications to them and see how they react.
-
 ** Recursive regexes in perl can call themselves.
    Or call undefined regexes at compile time: Instead of directly
    calling them by name, you have to wrap them into (??{our $regex})

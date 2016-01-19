@@ -75,41 +75,13 @@ $program = qr/^ \.syntax \s+
                \.end (?{say(pop(@stack), "()")})
              $/mx;
 
-my $bootstrap = q(
-.syntax program
-
-  output   = '{'
-             * ( '$'      {'io.write(_input)'}
-               | .string  {'io.write(' $  ')'})
-             '}'          {'io.write("\\\\n")' };
-
-  primary  = .id       { $ '()'                                }
-           | .string   {'_run.testSTR(' $ ')'                  }
-           | '.id'     {'local _input = _run.parseID()'        }
-           | '.number' {'local _input = _run.parseNUM()'       }
-           | '.string' {'local _input = _run.parseSTR()'       }
-           | '.empty'  {'_switch = true'                       }
-           | '(' choice ')'
-           | '*'       {'repeat            -- repetition --'   }
-             primary   {'until not _switch -- repetition (end)'}
-                       {'_switch = true'                       };
-
-  sequence = {'repeat            -- sequence   --'   }
-               (primary {'if not _switch then break   end'} | output)
-             * (primary {'if not _switch then error() end'} | output)
-             {'until true        -- sequence   (end)'};
-
-  choice   = {'repeat            -- choice     --'   }
-             sequence * ('|' {'if _switch then break end'} sequence)
-             {'until true        -- choice     (end)'};
-
-  rule     = .id            {'function ' $ '()'}
-             '=' choice ';' {'end -- ('  $ ')' };
-
-  program  = '.syntax' .id {'local _run = require("runtime")'}
-             * rule '.end' {$ '()'                           };
-
-.end
-);
+my $bootstrap;
+my $a;
+if ($a=shift){
+  local $/=undef;
+  open FILE, $a or die "Couldn't open file: $!";
+  $bootstrap= <FILE>;
+  close FILE;
+}
 
 ($bootstrap =~ /$program/)
