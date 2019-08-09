@@ -56,6 +56,9 @@
 
 * See also
   - [[http://www.tinlizzie.org/ometa/][Ometa]]
+  - http://home.pipeline.com/~hbaker1/Prag-Parse.html
+  - https://queue.acm.org/detail.cfm?id=2724586
+  - http://www.bayfronttechnologies.com/mc_tutorial.html
 
 * Who
   - Author: Raimon Grau <raimonster@gmail.com>
