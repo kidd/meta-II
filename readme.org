@@ -59,6 +59,7 @@
   - http://home.pipeline.com/~hbaker1/Prag-Parse.html
   - https://queue.acm.org/detail.cfm?id=2724586
   - http://www.bayfronttechnologies.com/mc_tutorial.html
+  - https://news.ycombinator.com/item?id=38184366 (https://github.com/kragen/stoneknifeforth and https://github.com/kragen/peg-bootstrap/blob/master/peg.md)
 
 * Who
   - Author: Raimon Grau <raimonster@gmail.com>
